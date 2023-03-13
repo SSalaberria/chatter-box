@@ -19,7 +19,7 @@ export default function Home() {
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("onEvent", onEvent);
+      socket.off("event", onEvent);
     };
   }, []);
 
@@ -34,7 +34,7 @@ export default function Home() {
       <main className={styles.main}>
         <button
           onClick={() =>
-            socket.emit("message", "testing", (response: string) => {
+            socket.emit("message", "This is an event sent from client", (response: string) => {
               console.log(response);
             })
           }
