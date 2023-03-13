@@ -1,6 +1,10 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+} from '@nestjs/websockets';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class EventsGateway {
   @SubscribeMessage('message')
   handleEvent(@MessageBody() data: string): string {
