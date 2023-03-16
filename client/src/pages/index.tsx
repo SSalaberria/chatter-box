@@ -10,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     const onConnect = () => setIsConnected(true);
     const onDisconnect = () => setIsConnected(false);
-    const onEvent = (value: string) => console.log(value);
+    const onEvent = (value: string) => console.log("Received new message", value);
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
@@ -34,9 +34,13 @@ export default function Home() {
       <main className={styles.main}>
         <button
           onClick={() =>
-            socket.emit("message", "This is an event sent from client", (response: string) => {
-              console.log(response);
-            })
+            socket.emit(
+              "message",
+              { content: "123", chatroom: "641248956ca8c53babb0e466" },
+              (response: object) => {
+                console.log("Coming back response", response);
+              },
+            )
           }
         >
           Send event
