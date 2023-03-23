@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { AuthService } from '../auth/auth.service';
+import { StorageService } from '../storage/storage.service';
 import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @Inject(forwardRef(() => AuthService)) private authService: AuthService,
+    private readonly storageService: StorageService,
   ) {}
 
   async findOne(username: string): Promise<UserDocument | null> {
@@ -32,7 +34,15 @@ export class UsersService {
   }
 
   async changeProfilePicture(id: Types.ObjectId, file: Express.Multer.File) {
-    console.log({ id, file });
+    const fileUrl = await this.storageService.uploadFile(file);
+
+    return this.userModel
+      .findOneAndUpdate(
+        { _id: id },
+        { avatar: fileUrl },
+        { returnOriginal: false },
+      )
+      .exec();
   }
 
   async getConnectedUsers(): Promise<UserDocument[]> {

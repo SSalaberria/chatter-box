@@ -7,19 +7,19 @@ import { User } from "../utils/types";
 
 import { socket } from "@/utils/socket";
 
-const QUERY_KEY = "onlineUsers";
+export const ONLINE_USERS_QUERY_KEY = "onlineUsers";
 
 export function useOnlineUsers() {
   const queryClient = useQueryClient();
-  const onlineUsersQuery = useQuery([QUERY_KEY], getOnlineUsers, {
+  const onlineUsersQuery = useQuery([ONLINE_USERS_QUERY_KEY], getOnlineUsers, {
     staleTime: 180,
   });
 
   useEffect(() => {
     const onUserConnected = (user: User) =>
-      queryClient.setQueryData<User[] | undefined>([QUERY_KEY], (prevUsers) => {
+      queryClient.setQueryData<User[] | undefined>([ONLINE_USERS_QUERY_KEY], (prevUsers) => {
         if (!prevUsers) {
-          queryClient.refetchQueries([QUERY_KEY]);
+          queryClient.refetchQueries([ONLINE_USERS_QUERY_KEY]);
         }
 
         if (!prevUsers?.find((onlineUser) => onlineUser._id === user._id)) {
@@ -30,7 +30,7 @@ export function useOnlineUsers() {
       });
 
     const onUserDisconnected = ({ userId }: { userId: string }) =>
-      queryClient.setQueryData<User[] | undefined>([QUERY_KEY], (prevUsers) => {
+      queryClient.setQueryData<User[] | undefined>([ONLINE_USERS_QUERY_KEY], (prevUsers) => {
         return prevUsers?.filter((user) => user._id !== userId);
       });
 

@@ -4,8 +4,11 @@ import { useRouter } from "next/router";
 
 import { editProfilePicture, getUser, login } from "../utils/requests";
 
+import { ONLINE_USERS_QUERY_KEY } from "./use-online-users.hook";
+
 import { setToken } from "@/utils/http";
 import { authorizeSocket, socket } from "@/utils/socket";
+import { CHATROOM_QUERY_KEY } from "@/features/chat/hooks/use-chatroom.hook";
 
 const USER_QUERY_KEY = "user";
 
@@ -31,7 +34,13 @@ export function useAuth() {
     },
   });
 
-  const modifyProfilePicture = useMutation(editProfilePicture);
+  const modifyProfilePicture = useMutation(editProfilePicture, {
+    onSuccess: (data) => {
+      queryClient.setQueryData([USER_QUERY_KEY], data);
+      queryClient.invalidateQueries([CHATROOM_QUERY_KEY]);
+      queryClient.invalidateQueries([ONLINE_USERS_QUERY_KEY]);
+    },
+  });
 
   const logIn = useMutation(login, {
     onSuccess(data) {

@@ -5,7 +5,6 @@ import {
   FileTypeValidator,
 } from '@nestjs/common';
 import {
-  Body,
   Get,
   Post,
   Request,
@@ -17,7 +16,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { SanitizeMongooseModelInterceptor } from 'nestjs-mongoose-exclude/lib/interceptors/sanitize-mongoose-model.interceptor';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserRequest } from '../auth/utils/types';
-import { EditUserDto } from './dtos/edit-user.dto';
 import { UsersService } from './users.service';
 @UseInterceptors(
   new SanitizeMongooseModelInterceptor({
@@ -53,16 +51,13 @@ export class UsersController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 5000000 }),
+          new MaxFileSizeValidator({ maxSize: 5000000 }), // 5mb
           new FileTypeValidator({ fileType: /(jpg|jpeg|png|webp)$/ }),
         ],
       }),
     )
     file: Express.Multer.File,
   ) {
-    console.log({ file });
-    if (file) {
-      this.usersService.changeProfilePicture(req.user.userId, file);
-    }
+    return this.usersService.changeProfilePicture(req.user.userId, file);
   }
 }

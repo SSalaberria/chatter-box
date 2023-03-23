@@ -31,6 +31,7 @@ export class UsersGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (user) {
       this.server.emit('userConnected', {
         username: user.username,
+        avatar: user.avatar,
         _id: user._id,
       });
     }

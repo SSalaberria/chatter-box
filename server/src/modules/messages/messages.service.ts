@@ -27,7 +27,7 @@ export class MessagesService {
       this.messageModel
         .find({ chatroom: chatroomId }, '-chatroom -__v')
         .sort({ createdAt: 1 })
-        .populate('author', '_id username')
+        .populate('author', '_id username avatar')
         .exec() || []
     );
   }

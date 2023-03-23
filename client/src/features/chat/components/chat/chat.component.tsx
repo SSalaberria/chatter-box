@@ -73,7 +73,7 @@ export const Chat = memo(
             }}
           />
         </div>
-        <div className="h-5 min-h-[5rem] pt-2">
+        <div className="h-12 min-h-[3rem] pt-2">
           <form className=" " onSubmit={handleSubmit}>
             <div className="relative flex">
               <input className="w-full pr-20" id="message" maxLength={1024} type="text" />

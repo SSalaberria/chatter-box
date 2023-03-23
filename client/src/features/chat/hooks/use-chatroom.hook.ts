@@ -10,9 +10,11 @@ interface Options {
   onMessageReceived?: (message: Message) => void;
 }
 
+export const CHATROOM_QUERY_KEY = "chatroom";
+
 export function useChatroom(chatroomId: string, options?: Options) {
   const queryClient = useQueryClient();
-  const queryKey = useMemo(() => ["chatroom", chatroomId], [chatroomId]);
+  const queryKey = useMemo(() => [CHATROOM_QUERY_KEY, chatroomId], [chatroomId]);
   const chatroomQuery = useQuery(queryKey, () => getChatroom(chatroomId), {
     refetchOnWindowFocus: false,
     staleTime: 13600,
@@ -29,7 +31,7 @@ export function useChatroom(chatroomId: string, options?: Options) {
 
   useEffect(() => {
     const onNewMessage = (event: { chatroomId: string; message: Message }) => {
-      const chatroomQueryKey = ["chatroom", event.chatroomId];
+      const chatroomQueryKey = [CHATROOM_QUERY_KEY, event.chatroomId];
 
       if (queryClient.getQueryData(chatroomQueryKey)) {
         queryClient.setQueryData<Chatroom | undefined>(chatroomQueryKey, (oldData) => {

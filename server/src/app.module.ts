@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ChatroomsModule } from './modules/chatrooms/chatrooms.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { StorageModule } from './modules/storage/storage.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UsersModule } from './modules/users/users.module';
     ChatroomsModule,
     AuthModule,
     UsersModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

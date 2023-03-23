@@ -18,8 +18,12 @@ export const Message = memo(
           {!isFromPreviousAuthor && message && (
             <Image
               alt="user-icon"
+              className="rounded-full"
               height={36}
-              src="https://icongr.am/material/account-circle.svg?size=64&color=5865f2"
+              src={
+                message.author.avatar ??
+                "https://icongr.am/material/account-circle.svg?size=64&color=5865f2"
+              }
               style={{
                 objectFit: "contain",
               }}
@@ -67,5 +71,7 @@ export const Message = memo(
       </div>
     );
   },
-  (prevProps, nextProps) => prevProps?.message?._id === nextProps?.message?._id,
+  (prevProps, nextProps) =>
+    prevProps?.message?._id === nextProps?.message?._id &&
+    prevProps.message?.author.avatar === nextProps.message?.author.avatar,
 );

@@ -12,6 +12,9 @@ export class User {
   @Prop({ required: true })
   @ExcludeProperty()
   password: string;
+
+  @Prop({ required: false, default: null })
+  avatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

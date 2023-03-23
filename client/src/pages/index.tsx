@@ -47,7 +47,7 @@ function Home({ user }: { user: User }) {
                 onSelect={handleSelect}
               />
             </div>
-            <div className="relative flex h-24 min-h-[6rem] w-full items-center justify-center bg-gray-300 px-4 pb-6 dark:bg-gray-800">
+            <div className="relative flex h-16 min-h-[4rem] w-full items-center justify-center bg-gray-300 px-4 dark:bg-gray-800">
               <UserTag isOnline={true} user={user} onImageClick={handleUpload} />
             </div>
           </div>
