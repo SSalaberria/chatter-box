@@ -8,8 +8,19 @@ import { Server } from 'http';
 import { Message } from './schemas/message.schema';
 import { CreateMessageDto } from './dtos/create-message.dto';
 import { MessagesService } from './messages.service';
-import { UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  Request,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { JwtPayload } from '../auth/utils/types';
+import { WsAuthGuard } from '../auth/guards/ws-auth.guard';
+import { WsUser } from 'src/decorators/ws-user.decorator';
 
+@UseGuards(WsAuthGuard)
 @UsePipes(
   new ValidationPipe({
     whitelist: true,
@@ -25,11 +36,19 @@ export class MessagesGateway {
 
   @SubscribeMessage('message')
   async handleEvent(
-    @MessageBody() createMessageDto: CreateMessageDto,
+    @MessageBody() createMessageDto: Omit<CreateMessageDto, 'author'>,
+    @WsUser() user: JwtPayload,
   ): Promise<Message> {
-    const newMessage = await this.messagesService.create(createMessageDto);
-    this.server.emit('event', newMessage);
+    const message = await this.messagesService.create({
+      ...createMessageDto,
+      author: user.userId,
+    });
 
-    return newMessage;
+    this.server.emit('newMessage', {
+      message,
+      chatroomId: createMessageDto.chatroom,
+    });
+
+    return message;
   }
 }

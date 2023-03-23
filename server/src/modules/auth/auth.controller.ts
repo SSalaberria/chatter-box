@@ -1,10 +1,23 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { SanitizeMongooseModelInterceptor } from 'nestjs-mongoose-exclude/lib/interceptors/sanitize-mongoose-model.interceptor';
 import { UserDocument } from '../users/schemas/user.schema';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-
+@UseInterceptors(
+  new SanitizeMongooseModelInterceptor({
+    excludeMongooseId: false,
+    excludeMongooseV: true,
+  }),
+)
 @Controller('auth')
 export class AuthController {
   constructor(

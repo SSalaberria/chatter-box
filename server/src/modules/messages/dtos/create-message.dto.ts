@@ -8,4 +8,7 @@ export class CreateMessageDto {
 
   @IsNotEmpty()
   public chatroom: Types.ObjectId;
+
+  @IsNotEmpty()
+  public author: Types.ObjectId;
 }

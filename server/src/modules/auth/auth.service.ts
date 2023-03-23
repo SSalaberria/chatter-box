@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compareSync, hashSync } from 'bcrypt';
 import { UserDocument } from '../users/schemas/user.schema';
 import { UsersService } from '../users/users.service';
+import { JwtPayload } from './utils/types';
 
 @Injectable()
 export class AuthService {
@@ -28,9 +29,25 @@ export class AuthService {
 
   async login(user: UserDocument) {
     const payload = { username: user.username, sub: user._id };
+    // const { password: _, ...userData } = user.toObject();
+
     return {
       accessToken: this.jwtService.sign(payload),
+      userData: user,
     };
+  }
+
+  verify(token: string): JwtPayload {
+    try {
+      const jwtData = this.jwtService.verify(token);
+
+      return {
+        username: jwtData.username,
+        userId: jwtData.sub,
+      };
+    } catch (e) {
+      throw new Error('Error parsing user token.');
+    }
   }
 
   hashPassword(password: string): string {

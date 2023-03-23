@@ -7,6 +7,9 @@ export type ChatroomDocument = HydratedDocument<Chatroom>;
 export class Chatroom {
   @Prop({ required: true, unique: true })
   public name: string;
+
+  @Prop()
+  public description: string;
 }
 
 export const ChatroomSchema = SchemaFactory.createForClass(Chatroom);

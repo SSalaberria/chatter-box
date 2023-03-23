@@ -6,6 +6,8 @@ import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UsersService {
+  private onlineUsers: Types.ObjectId[] = [];
+
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @Inject(forwardRef(() => AuthService)) private authService: AuthService,
@@ -19,7 +21,7 @@ export class UsersService {
     return this.userModel.findById(id).exec();
   }
 
-  async create(username: string, password: string): Promise<User> {
+  async create(username: string, password: string): Promise<UserDocument> {
     const hashedPassword = this.authService.hashPassword(password);
     const createdUser = await this.userModel.create({
       username,
@@ -27,5 +29,27 @@ export class UsersService {
     });
 
     return createdUser.save();
+  }
+
+  async changeProfilePicture(id: Types.ObjectId, file: Express.Multer.File) {
+    console.log({ id, file });
+  }
+
+  async getConnectedUsers(): Promise<UserDocument[]> {
+    return this.userModel.find({ _id: { $in: this.onlineUsers } }).exec();
+  }
+
+  async addConnectedUser(id: Types.ObjectId): Promise<UserDocument | null> {
+    const user = await this.findById(id);
+
+    if (!this.onlineUsers.includes(id)) {
+      this.onlineUsers.push(id);
+    }
+
+    return user;
+  }
+
+  removeConnectedUser(id: Types.ObjectId) {
+    this.onlineUsers = this.onlineUsers.filter((userId) => userId !== id);
   }
 }

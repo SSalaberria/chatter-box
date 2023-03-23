@@ -13,7 +13,9 @@ export class MessagesService {
   create(createMessageDto: CreateMessageDto): Promise<Message> {
     const createdMessage = new this.messageModel(createMessageDto);
 
-    return createdMessage.save();
+    return createdMessage
+      .save()
+      .then((message) => message.populate('author', '_id username'));
   }
 
   findAll(): Promise<Message[]> {
@@ -24,6 +26,8 @@ export class MessagesService {
     return (
       this.messageModel
         .find({ chatroom: chatroomId }, '-chatroom -__v')
+        .sort({ createdAt: 1 })
+        .populate('author', '_id username')
         .exec() || []
     );
   }

@@ -12,6 +12,11 @@ export class ChatroomsController {
     return this.chatroomsService.findOneWithMessages(id);
   }
 
+  @Get()
+  async findAll(): Promise<Chatroom[]> {
+    return this.chatroomsService.findAll();
+  }
+
   @Post()
   async create(
     @Body() createChatroomDto: CreateChatroomDto,

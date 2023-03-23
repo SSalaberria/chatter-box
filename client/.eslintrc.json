@@ -46,7 +46,8 @@
       {
         "args": "after-used",
         "ignoreRestSiblings": false,
-        "argsIgnorePattern": "^_.*?$"
+        "argsIgnorePattern": "^_.*?$",
+        "varsIgnorePattern": "^_"
       }
     ],
     "import/order": ["warn", {

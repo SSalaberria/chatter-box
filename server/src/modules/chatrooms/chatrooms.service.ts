@@ -26,6 +26,10 @@ export class ChatroomsService {
     return { ...chatroomData.toObject(), messages };
   }
 
+  async findAll(): Promise<Chatroom[]> {
+    return this.chatroomModel.find().exec();
+  }
+
   create(CreateChatroomDto: CreateChatroomDto): Promise<Chatroom> {
     const createdChatroom = new this.chatroomModel(CreateChatroomDto);
 
