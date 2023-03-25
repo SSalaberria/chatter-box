@@ -36,7 +36,7 @@ const SelectableItem = memo(
 );
 
 interface ChatroomsListProps {
-  chatrooms: Chatroom[];
+  chatrooms: Chatroom[] | undefined;
   selected: Chatroom | null;
   onSelect: (option: Chatroom) => void;
   onAddChatroom: (value: string) => void;
@@ -73,7 +73,7 @@ export const ChatroomsList = memo(
 
     return (
       <ul className="grid w-full grid-cols-1 gap-6">
-        {chatrooms.map((channel) => (
+        {chatrooms?.map((channel) => (
           <SelectableItem
             key={channel._id}
             option={channel}
@@ -107,6 +107,6 @@ export const ChatroomsList = memo(
     );
   },
   (prevProps, nextProps) =>
-    prevProps.chatrooms.length === nextProps.chatrooms.length &&
+    prevProps.chatrooms?.length === nextProps.chatrooms?.length &&
     prevProps.selected?._id === nextProps.selected?._id,
 );

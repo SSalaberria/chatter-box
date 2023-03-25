@@ -58,5 +58,6 @@ export const UserTag = memo(
     );
   },
   (prevProps, nextProps) =>
-    prevProps.isOnline === nextProps.isOnline && prevProps.user.avatar === nextProps.user.avatar,
+    prevProps.isOnline === nextProps.isOnline &&
+    prevProps?.user?.avatar === nextProps?.user?.avatar,
 );

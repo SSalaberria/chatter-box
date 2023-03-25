@@ -1,4 +1,4 @@
-import { Chatroom } from "./types";
+import { Chatroom, Message } from "./types";
 
 import http from "@/utils/http";
 
@@ -9,3 +9,6 @@ export const getChatrooms = async () => http.get<Chatroom[]>("/chatrooms").then(
 
 export const createChatroom = async (payload: { name: string; description?: string }) =>
   http.post<Chatroom>("/chatrooms", payload).then((res) => res.data);
+
+export const deleteMessage = async (id: string) =>
+  http.delete<Message>(`/messages/${id}`).then((res) => res.data);

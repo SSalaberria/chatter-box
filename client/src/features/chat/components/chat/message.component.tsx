@@ -8,12 +8,17 @@ import { formatDate } from "@/utils/helpers";
 interface MessageProps {
   message?: IMessage;
   isFromPreviousAuthor?: boolean;
+  onDelete?: (message: IMessage) => void;
 }
 
 export const Message = memo(
-  function Message({ message, isFromPreviousAuthor }: MessageProps) {
+  function Message({ message, isFromPreviousAuthor, onDelete }: MessageProps) {
     return (
-      <div className={`flex min-w-fit items-center gap-4 ${!isFromPreviousAuthor ? "mt-4" : ""}`}>
+      <div
+        className={`flex min-w-fit items-center gap-4 hover:bg-gray-100 dark:hover:bg-[#2E3035] ${
+          !isFromPreviousAuthor ? "mt-4" : ""
+        }`}
+      >
         <div className="mb-auto w-8 pt-2">
           {!isFromPreviousAuthor && message && (
             <Image
@@ -32,15 +37,15 @@ export const Message = memo(
           )}
           {!message && <div className="mb-2 h-7 w-7 animate-pulse rounded-full bg-gray-500" />}
         </div>
-        <div className="flex w-full flex-col gap-1">
-          <div className="flex items-end gap-2">
+        <div className="group/item relative flex w-full flex-col gap-1 py-0.5">
+          <div className="flex">
             {!isFromPreviousAuthor && message && (
-              <>
+              <div className="flex items-end gap-2">
                 <span className="text-m font-bold dark:text-white">{message.author.username}</span>
                 <span className="-mb-[1px] text-s text-[#72767D]">
                   {formatDate(message.createdAt)}
                 </span>
-              </>
+              </div>
             )}
             {!message && (
               <div className="flex-1 animate-pulse space-y-6 py-1">
@@ -67,11 +72,33 @@ export const Message = memo(
             )}
           </div>
           <div>{message && message.content}</div>
+          {message && onDelete && (
+            <div
+              className="invisible absolute right-1 -top-3 flex items-center bg-white px-1 py-0.5 group-hover/item:visible dark:bg-[#313338]"
+              style={{
+                boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+              }}
+            >
+              <button
+                className="hover:bg-[#DDDDDD70] dark:hover:bg-[#DDDDDD30]"
+                onClick={() => onDelete(message)}
+              >
+                <Image
+                  alt="btn-delete-msg"
+                  className=""
+                  height={22}
+                  src="https://icongr.am/material/delete.svg?size=36&color=ED4245"
+                  width={22}
+                />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
   },
   (prevProps, nextProps) =>
     prevProps?.message?._id === nextProps?.message?._id &&
-    prevProps.message?.author.avatar === nextProps.message?.author.avatar,
+    prevProps.message?.author.avatar === nextProps.message?.author.avatar &&
+    prevProps.isFromPreviousAuthor === nextProps.isFromPreviousAuthor,
 );

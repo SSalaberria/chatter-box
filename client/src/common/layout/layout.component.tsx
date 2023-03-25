@@ -53,7 +53,7 @@ export const Layout = memo(
     }, []);
 
     return (
-      <main className={`flex h-screen flex-col overflow-y-hidden ${className}`}>
+      <main className={`flex h-screen flex-col overflow-hidden ${className}`}>
         {!loading && finishedAnimation ? (
           <>
             <div className="flex justify-between bg-gray-200 p-1 dark:bg-[#1E1F22]">
@@ -65,7 +65,14 @@ export const Layout = memo(
               />
               <DynamicToggle value={theme} onChange={toggleTheme} />
             </div>
-            <div className="flex h-full">{children}</div>
+            <div
+              className="flex"
+              style={{
+                height: "calc(100% - 26px)",
+              }}
+            >
+              {children}
+            </div>
           </>
         ) : (
           <div className="flex h-1/2 flex-col items-center justify-center">

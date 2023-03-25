@@ -4,7 +4,7 @@
 @layer components {
   input,
   textarea {
-    @apply dark:bg-gray-500 bg-slate-200 rounded-lg p-2 text-gray-400 dark:text-gray-300 shadow
+    @apply dark:bg-gray-500 bg-slate-200 rounded-lg p-2 text-gray-500 dark:text-gray-300 shadow
   }
   .btn-primary {
     @apply bg-blue-500 text-white rounded-sm p-2 hover:bg-blue-400 transition-all duration-200 !important
@@ -55,8 +55,12 @@ body {
 }
 
 a {
-  color: inherit;
+  color: theme('colors.blue.500');
   text-decoration: none;
+}
+
+a:hover {
+  color: theme('colors.blue.400')
 }
 
 

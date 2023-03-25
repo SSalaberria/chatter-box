@@ -5,15 +5,18 @@ import { useChatroom } from "../../hooks/use-chatroom.hook";
 
 import { Message } from "./message.component";
 
+import { useAuth } from "@/features/auth";
+
 interface ChatProps {
   id: string;
 }
 
 export const Chat = memo(
   function Chat({ id }: ChatProps) {
+    const { userQuery } = useAuth();
     const bottomRef = useRef<HTMLDivElement>(null);
     const chatRef = useRef<HTMLDivElement>(null);
-    const { sendMessage, chatroomQuery } = useChatroom(id);
+    const { sendMessage, chatroomQuery, deleteMessage } = useChatroom(id);
 
     const handleSubmit = (e: React.SyntheticEvent) => {
       e.preventDefault();
@@ -59,6 +62,9 @@ export const Chat = memo(
                 key={message._id}
                 isFromPreviousAuthor={isFromPreviousAuthor}
                 message={message}
+                {...(userQuery.data?._id === message.author._id && {
+                  onDelete: (message) => deleteMessage.mutate(message._id),
+                })}
               />
             );
           })}

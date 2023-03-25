@@ -1,8 +1,9 @@
 import { useCookies } from "react-cookie";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
+import { useCallback } from "react";
 
-import { editProfilePicture, getUser, login } from "../utils/requests";
+import { editProfilePicture, getUser, login, register as registerRequest } from "../utils/requests";
 
 import { ONLINE_USERS_QUERY_KEY } from "./use-online-users.hook";
 
@@ -27,11 +28,7 @@ export function useAuth() {
         afterAuthSetup(cookies.jwt);
       }
     },
-    onError: () => {
-      removeCookie("jwt");
-      removeAuthConfig();
-      push("/login");
-    },
+    onError: () => logOut(),
   });
 
   const modifyProfilePicture = useMutation(editProfilePicture, {
@@ -44,13 +41,30 @@ export function useAuth() {
 
   const logIn = useMutation(login, {
     onSuccess(data) {
-      const { accessToken, user } = data;
+      const { accessToken, userData } = data;
 
-      queryClient.setQueryData([USER_QUERY_KEY], user);
+      queryClient.setQueryData([USER_QUERY_KEY], userData);
 
       afterAuthSetup(accessToken);
     },
   });
+
+  const register = useMutation(registerRequest, {
+    onSuccess(data) {
+      const { accessToken, userData } = data;
+
+      queryClient.setQueryData([USER_QUERY_KEY], userData);
+
+      afterAuthSetup(accessToken);
+    },
+  });
+
+  const logOut = useCallback(() => {
+    removeCookie("jwt");
+    removeAuthConfig();
+    push("/login");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const afterAuthSetup = (accessToken: string) => {
     setCookie("jwt", accessToken);
@@ -68,5 +82,5 @@ export function useAuth() {
     authorizeSocket(null);
   };
 
-  return { userQuery, logIn, modifyProfilePicture };
+  return { userQuery, logIn, logOut, modifyProfilePicture, register };
 }

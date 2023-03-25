@@ -1,7 +1,7 @@
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useEffect, useMemo } from "react";
 
-import { getChatroom } from "../utils/requests";
+import { deleteMessage as deleteMessageRequest, getChatroom } from "../utils/requests";
 import { Message, Chatroom } from "../utils/types";
 
 import { socket } from "@/utils/socket";
@@ -29,6 +29,26 @@ export function useChatroom(chatroomId: string, options?: Options) {
     });
   };
 
+  const deleteMessage = useMutation(deleteMessageRequest, {
+    onMutate: (messageId) => {
+      const oldData = queryClient.getQueryData<Chatroom | undefined>(queryKey);
+
+      queryClient.setQueryData<Chatroom | undefined>(queryKey, (prevData) =>
+        prevData
+          ? {
+              ...prevData,
+              messages: prevData?.messages.filter((message) => message._id !== messageId),
+            }
+          : undefined,
+      );
+
+      return { oldData };
+    },
+    onError: (_err, _var, context) => {
+      queryClient.setQueryData(queryKey, context?.oldData);
+    },
+  });
+
   useEffect(() => {
     const onNewMessage = (event: { chatroomId: string; message: Message }) => {
       const chatroomQueryKey = [CHATROOM_QUERY_KEY, event.chatroomId];
@@ -51,12 +71,27 @@ export function useChatroom(chatroomId: string, options?: Options) {
       }
     };
 
+    const onMessageDelete = (event: { chatroomId: string; messageId: string }) => {
+      const chatroomQueryKey = [CHATROOM_QUERY_KEY, event.chatroomId];
+
+      queryClient.setQueryData<Chatroom | undefined>(chatroomQueryKey, (oldData) =>
+        oldData
+          ? {
+              ...oldData,
+              messages: oldData.messages.filter((message) => message._id !== event.messageId),
+            }
+          : undefined,
+      );
+    };
+
     socket.on("newMessage", onNewMessage);
+    socket.on("onMessageDelete", onMessageDelete);
 
     return () => {
       socket.off("newMessage", onNewMessage);
+      socket.off("onMessageDelete", onMessageDelete);
     };
   }, [queryClient, queryKey, onMessageReceived]);
 
-  return { chatroomQuery, sendMessage };
+  return { chatroomQuery, sendMessage, deleteMessage };
 }
