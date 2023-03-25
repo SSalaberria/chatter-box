@@ -47,10 +47,10 @@ export const Chat = memo(
     const scrollToBottom = () => chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
 
     return (
-      <div className="flex h-[95%] w-full flex-col justify-between  px-2">
+      <div className="flex w-full flex-col justify-between px-2">
         <div
           ref={chatRef}
-          className="flex h-full flex-col overflow-y-auto pl-2"
+          className="flex flex-col overflow-y-auto pl-2"
           style={{ overflowAnchor: "none" }}
         >
           {chatroomQuery?.data?.messages.map((message, index) => {
@@ -79,18 +79,16 @@ export const Chat = memo(
             }}
           />
         </div>
-        <div className="h-12 min-h-[3rem] pt-2">
-          <form className=" " onSubmit={handleSubmit}>
-            <div className="relative flex">
-              <input className="w-full pr-20" id="message" maxLength={1024} type="text" />
-              <div className="absolute right-2.5 bottom-0.5">
-                <button
-                  className="border-l-2 border-gray-300 bg-transparent pl-4 hover:scale-110 dark:border-[#4F545C]"
-                  type="submit"
-                >
-                  <Image alt="btn-send" height={24} src="/icons/right-arrow.svg" width={24} />
-                </button>
-              </div>
+        <div className="h-16 min-h-[4rem] pt-2">
+          <form className="relative" onSubmit={handleSubmit}>
+            <input className="w-full pr-20" id="message" maxLength={1024} type="text" />
+            <div className="absolute right-2.5 bottom-0.5">
+              <button
+                className="border-l-2 border-gray-300 bg-transparent pl-4 hover:scale-110 dark:border-[#4F545C]"
+                type="submit"
+              >
+                <Image alt="btn-send" height={24} src="/icons/right-arrow.svg" width={24} />
+              </button>
             </div>
           </form>
         </div>

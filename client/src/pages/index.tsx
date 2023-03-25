@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { useAuth, User, withAuth } from "@/features/auth";
 import { Chat, ChatroomsList, Chatroom, UsersList } from "@/features/chat";
-import { Drawer, Layout, UserTag } from "@/common";
+import { Drawer, Layout, useMediaQuery, UserTag } from "@/common";
 import { useChatrooms } from "@/features/chat/hooks/use-chatrooms.hook";
 import { useOnlineUsers } from "@/features/auth/hooks/use-online-users.hook";
 
@@ -11,6 +11,7 @@ function Home({ user }: { user: User }) {
   const { chatroomsQuery, createChatroom } = useChatrooms();
   const { modifyProfilePicture, logOut } = useAuth();
   const { onlineUsersQuery } = useOnlineUsers();
+  const isMobile = useMediaQuery(640);
   const [selected, setSelected] = useState<Chatroom | null>(null);
   const [chatroomListOpen, setChatroomListOpen] = useState(false);
   const [usersListOpen, setUsersListOpen] = useState(false);
@@ -93,27 +94,31 @@ function Home({ user }: { user: User }) {
     <Layout loading={chatroomsQuery.isLoading || onlineUsersQuery.isLoading}>
       {chatroomsQuery.data && (
         <>
-          <div className="hidden sm:block">{chatroomsColumn}</div>
+          {!isMobile && chatroomsColumn}
 
-          <div className="sm:hidden">
-            <Drawer
-              isOpen={chatroomListOpen}
-              origin="left"
-              title="Chatrooms"
-              onClose={() => setChatroomListOpen(false)}
-            >
-              {chatroomsColumn}
-            </Drawer>
-            <Drawer
-              isOpen={usersListOpen}
-              origin="right"
-              title="Online"
-              onClose={() => setUsersListOpen(false)}
-            >
-              {usersColumn}
-            </Drawer>
-          </div>
-          <div className="flex h-full w-full flex-col">
+          {isMobile && (
+            <>
+              <Drawer
+                isOpen={chatroomListOpen}
+                origin="left"
+                title="Chatrooms"
+                onClose={() => setChatroomListOpen(false)}
+              >
+                {chatroomsColumn}
+              </Drawer>
+
+              <Drawer
+                isOpen={usersListOpen}
+                origin="right"
+                title="Online"
+                onClose={() => setUsersListOpen(false)}
+              >
+                {usersColumn}
+              </Drawer>
+            </>
+          )}
+
+          <div className="flex w-full flex-col">
             <div className="flex h-12 min-h-[3rem] items-center px-4 align-middle shadow-elevation-low sm:px-0">
               {selected && (
                 <>
@@ -154,11 +159,14 @@ function Home({ user }: { user: User }) {
                 </>
               )}
             </div>
-            <div className="flex h-full w-full">
-              <div className="flex  h-full w-full overflow-hidden">
-                {selected && <Chat id={selected._id} />}
-              </div>
-              <div className="hidden sm:block">{usersColumn}</div>
+            <div
+              className="flex w-full"
+              style={{
+                height: "calc(100% - 3rem)",
+              }}
+            >
+              <div className="flex w-full">{selected && <Chat id={selected._id} />}</div>
+              {!isMobile && usersColumn}
             </div>
           </div>
         </>

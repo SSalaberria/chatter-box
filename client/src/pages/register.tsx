@@ -32,7 +32,7 @@ export default function LoginPage({}) {
   return (
     <main className="flex h-screen w-full items-start justify-center">
       <form
-        className="mt-20 flex h-[28rem] w-96 flex-col justify-center gap-4 rounded-xl border-[#ccc] px-8 shadow-lg dark:bg-gray-700"
+        className="flex h-full w-full flex-col justify-center gap-4 rounded-xl border-[#ccc] px-8 shadow-lg dark:bg-gray-700 sm:mt-20 sm:h-[28rem] sm:w-96"
         onSubmit={handleSubmit}
       >
         <Image
