@@ -18,14 +18,14 @@ export const UserTag = memo(
         <div className="relative">
           <Image
             alt="user-profile-pic"
-            className={`rounded-full object-contain filter ${
+            className={`max-h-10 max-w-[2.75rem] rounded-full object-contain filter ${
               onImageClick ? "cursor-pointer hover:bg-[#DDDDDD30]" : ""
             }`}
-            height={42}
+            height={38}
             src={
               user?.avatar ?? "https://icongr.am/material/account-circle.svg?size=64&color=5865f2"
             }
-            width={42}
+            width={38}
             {...(onImageClick && {
               onClick: () => inputRef.current?.click(),
             })}

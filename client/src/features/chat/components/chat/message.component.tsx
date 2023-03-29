@@ -32,6 +32,8 @@ export const Message = memo(
               }
               style={{
                 objectFit: "contain",
+                maxHeight: "36px",
+                maxWidth: "36px",
               }}
               width={36}
             />
