@@ -17,3 +17,23 @@ Some of the techs used:
 * TailwindCSS for the styling.
 * NestJS for the backend, both for the services and the websocket.
 * MongoDB for the database, with Mongoose as ODM.
+
+# Running it locally
+
+## Requirements
+
+- [Node.js](https://nodejs.org/en) > 16.10.0
+- [MongoDB Server](https://www.mongodb.com/try/download/community)
+
+
+### Frontend
+```cmd
+npm install
+npm run dev
+```
+
+### Backend
+```cmd
+npm install
+npm run start:dev
+```
