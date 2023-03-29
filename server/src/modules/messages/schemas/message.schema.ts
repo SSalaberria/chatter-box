@@ -6,6 +6,11 @@ import { User } from 'src/modules/users/schemas/user.schema';
 
 export type MessageDocument = HydratedDocument<Message>;
 
+export enum MESSAGE_TYPE {
+  text = 'text',
+  image = 'image',
+}
+
 @Schema({ timestamps: true })
 export class Message {
   @Prop({ required: true })
@@ -20,6 +25,13 @@ export class Message {
     required: true,
   })
   chatroom: Chatroom;
+
+  @Prop({
+    required: true,
+    enum: Object.values(MESSAGE_TYPE),
+    default: MESSAGE_TYPE.text,
+  })
+  type: MESSAGE_TYPE;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

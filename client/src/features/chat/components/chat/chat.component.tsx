@@ -16,7 +16,8 @@ export const Chat = memo(
     const { userQuery } = useAuth();
     const bottomRef = useRef<HTMLDivElement>(null);
     const chatRef = useRef<HTMLDivElement>(null);
-    const { sendMessage, chatroomQuery, deleteMessage } = useChatroom(id);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { sendMessage, chatroomQuery, deleteMessage, sendImage } = useChatroom(id);
 
     const handleSubmit = (e: React.SyntheticEvent) => {
       e.preventDefault();
@@ -81,7 +82,39 @@ export const Chat = memo(
         </div>
         <div className="h-16 min-h-[4rem] pt-2">
           <form className="relative" onSubmit={handleSubmit}>
-            <input className="w-full pr-20" id="message" maxLength={1024} type="text" />
+            <input
+              className="w-full pr-20 pl-10 "
+              id="message"
+              maxLength={1024}
+              placeholder={`Message #${chatroomQuery.data?.name}`}
+              type="text"
+            />
+            <div className="absolute left-2.5 bottom-1">
+              <input
+                ref={fileInputRef}
+                accept="image/png, image/jpeg"
+                className="absolute hidden"
+                multiple={false}
+                required={false}
+                type="file"
+                onChangeCapture={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  e.target.files && sendImage.mutate(e.target?.files[0])
+                }
+              />
+              <button
+                disabled={sendImage.isLoading}
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Image
+                  alt="btn-send-image"
+                  className="hover:scale-105"
+                  height={20}
+                  src={sendImage.isLoading ? "/icons/loading.svg" : "/icons/plus.svg"}
+                  width={20}
+                />
+              </button>
+            </div>
             <div className="absolute right-2.5 bottom-0.5">
               <button
                 className="border-l-2 border-gray-300 bg-transparent pl-4 hover:scale-110 dark:border-[#4F545C]"

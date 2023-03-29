@@ -31,7 +31,7 @@ function Home({ user }: { user: User }) {
 
   const chatroomsColumn = useMemo(
     () => (
-      <div className="relative flex h-full w-[14rem] min-w-[14rem] flex-col bg-gray-100 pt-2 dark:bg-gray-700">
+      <div className="relative flex h-full flex-col overflow-x-hidden bg-gray-100 pt-2 dark:bg-gray-700 sm:w-[14rem] sm:min-w-[14rem]">
         <div
           className="h-full overflow-hidden py-2 px-2 hover:overflow-y-auto"
           style={{
@@ -45,8 +45,8 @@ function Home({ user }: { user: User }) {
             onSelect={handleSelect}
           />
         </div>
-        <div className="relative flex h-16 min-h-[4rem] w-full items-center justify-between bg-gray-300 px-4 dark:bg-gray-800">
-          <div className=" max-w-[10rem]">
+        <div className="relative flex h-16 min-h-[4rem] w-full items-center justify-between overflow-x-hidden bg-gray-300 px-4 dark:bg-gray-800">
+          <div className=" max-w-[10rem] ">
             <UserTag
               isOnline={true}
               user={user}

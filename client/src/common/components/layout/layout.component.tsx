@@ -19,7 +19,7 @@ interface LayoutProps {
 
 const initThemeState = () => {
   if (typeof window !== "undefined")
-    return (localStorage?.getItem("theme") as ThemeOption) || "light";
+    return (localStorage?.getItem("theme") as ThemeOption) || "dark";
   else return "light";
 };
 
@@ -88,7 +88,7 @@ export const Layout = memo(
                 {"Chatterbox".split("").map((letter, index) => (
                   <span
                     key={index}
-                    className={[`${index < 7 && "text-gray-500 dark:text-white"}`, css.test].join(
+                    className={[`${index < 7 && "text-gray-500 dark:text-white"}`, css.anim].join(
                       " ",
                     )}
                     style={{

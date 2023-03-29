@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { memo } from "react";
 
-import { Message as IMessage } from "../../utils/types";
+import { Message as IMessage, MESSAGE_TYPE } from "../../utils/types";
 
 import { formatDate } from "@/utils/helpers";
+import { ZoomableImage } from "@/common";
 
 interface MessageProps {
   message?: IMessage;
@@ -71,7 +72,25 @@ export const Message = memo(
               </div>
             )}
           </div>
-          <div>{message && message.content}</div>
+          {message?.content && (
+            <div className={"relative"}>
+              {message.type === MESSAGE_TYPE.text && message.content}{" "}
+              {message.type === MESSAGE_TYPE.image && (
+                <ZoomableImage
+                  alt="msg-image"
+                  height="450"
+                  src={message.content}
+                  style={{
+                    objectFit: "contain",
+                    maxWidth: "350px",
+                    maxHeight: "450px",
+                  }}
+                  width="350"
+                />
+              )}
+            </div>
+          )}
+
           {message && onDelete && (
             <div
               className="invisible absolute right-1 -top-3 flex items-center bg-white px-1 py-0.5 group-hover/item:visible dark:bg-[#313338]"

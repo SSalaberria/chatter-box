@@ -39,7 +39,7 @@ export class MessagesService {
   findMessagesInChatroom(chatroomId: string): Promise<Message[]> {
     return (
       this.messageModel
-        .find({ chatroom: chatroomId }, '-chatroom -__v')
+        .find({ chatroom: chatroomId }, '-__v')
         .sort({ createdAt: 1 })
         .populate('author', '_id username avatar')
         .exec() || []

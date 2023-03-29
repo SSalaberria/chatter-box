@@ -8,14 +8,7 @@ import { Server } from 'http';
 import { Message } from './schemas/message.schema';
 import { CreateMessageDto } from './dtos/create-message.dto';
 import { MessagesService } from './messages.service';
-import {
-  createParamDecorator,
-  ExecutionContext,
-  Request,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { JwtPayload } from '../auth/utils/types';
 import { WsAuthGuard } from '../auth/guards/ws-auth.guard';
 import { WsUser } from 'src/decorators/ws-user.decorator';
@@ -44,11 +37,14 @@ export class MessagesGateway {
       author: user.userId,
     });
 
-    this.server.emit('newMessage', {
-      message,
-      chatroomId: createMessageDto.chatroom,
-    });
+    this.emitMessage(message);
 
     return message;
+  }
+
+  emitMessage(message: Message) {
+    this.server.emit('newMessage', {
+      message,
+    });
   }
 }

@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useEffect, useMemo } from "react";
 
-import { deleteMessage as deleteMessageRequest, getChatroom } from "../utils/requests";
+import {
+  deleteMessage as deleteMessageRequest,
+  getChatroom,
+  sendImage as sendImageRequest,
+} from "../utils/requests";
 import { Message, Chatroom } from "../utils/types";
 
 import { socket } from "@/utils/socket";
@@ -29,6 +33,12 @@ export function useChatroom(chatroomId: string, options?: Options) {
     });
   };
 
+  const sendImage = useMutation((file: File) => sendImageRequest({ file, chatroomId }), {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+
   const deleteMessage = useMutation(deleteMessageRequest, {
     onMutate: (messageId) => {
       const oldData = queryClient.getQueryData<Chatroom | undefined>(queryKey);
@@ -50,8 +60,8 @@ export function useChatroom(chatroomId: string, options?: Options) {
   });
 
   useEffect(() => {
-    const onNewMessage = (event: { chatroomId: string; message: Message }) => {
-      const chatroomQueryKey = [CHATROOM_QUERY_KEY, event.chatroomId];
+    const onNewMessage = (event: { message: Message }) => {
+      const chatroomQueryKey = [CHATROOM_QUERY_KEY, event.message.chatroom];
 
       if (queryClient.getQueryData(chatroomQueryKey)) {
         queryClient.setQueryData<Chatroom | undefined>(chatroomQueryKey, (oldData) => {
@@ -63,7 +73,7 @@ export function useChatroom(chatroomId: string, options?: Options) {
           }
         });
       } else {
-        queryClient.fetchQuery(chatroomQueryKey, () => getChatroom(event.chatroomId));
+        queryClient.fetchQuery(chatroomQueryKey, () => getChatroom(event.message.chatroom));
       }
 
       if (onMessageReceived) {
@@ -93,5 +103,5 @@ export function useChatroom(chatroomId: string, options?: Options) {
     };
   }, [queryClient, queryKey, onMessageReceived]);
 
-  return { chatroomQuery, sendMessage, deleteMessage };
+  return { chatroomQuery, sendMessage, deleteMessage, sendImage };
 }
